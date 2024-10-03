@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from 'react';
+import Lenis from '@studio-freight/lenis';
 
 const ScrollImageCanvas = ({ images }) => {
   const canvasRef = useRef(null);
+  const lenisRef = useRef(null);
 
   // Function to resize the canvas to the window size
   const resizeCanvas = () => {
@@ -37,94 +39,108 @@ const ScrollImageCanvas = ({ images }) => {
     renderImage(imageIndex);
   };
 
-  // Hook to set up event listeners
+  // Hook to initialize Lenis and set up event listeners
   useEffect(() => {
     resizeCanvas(); // Initial resize
 
+    // Initialize Lenis for smooth scrolling
+    lenisRef.current = new Lenis({
+      duration: 1.2, // Smooth scroll duration (seconds)
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Custom easing function
+    });
+
+    const lenis = lenisRef.current;
+
+    // Scroll update function to trigger scroll-related actions
+    const raf = (time) => {
+      lenis.raf(time);
+      requestAnimationFrame(raf); // Keep Lenis animation frame active
+    };
+
+    requestAnimationFrame(raf);
+
+    lenis.on('scroll', handleScroll); // Handle scroll with Lenis
+
     window.addEventListener('resize', resizeCanvas); // Resize on window resize
-    window.addEventListener('scroll', handleScroll); // Update image on scroll
 
     return () => {
       window.removeEventListener('resize', resizeCanvas);
-      window.removeEventListener('scroll', handleScroll);
+      lenis.off('scroll', handleScroll); // Clean up Lenis scroll event
     };
   }, [images]); // Runs effect whenever `images` array changes
 
   return (
     <div>
-  <div className="nav">
+      <div className="nav">
         <h3><b>CYBER</b>FICTION*</h3>
         <button>APRIL,2023</button>
-    </div>
-    <div className="main">
-<div className="page">
-    <div className="loop">
-    <h1><b>CYBER</b>FICTION IS THE <b><i>REAL</i></b> <span>STORY</span> IN THE <span><i>METAVERSE.</i></span></h1>
-                <h1><b>CYBER</b>FICTION IS THE <b><i>REAL</i></b> <span>STORY</span> IN THE <span><i>METAVERSE.</i></span></h1>
-                <h1><b>CYBER</b>FICTION IS THE <b><i>REAL</i></b> <span>STORY</span> IN THE <span><i>METAVERSE.</i></span></h1>
-    </div>
-    <h3>CYBERFICTION AIMS TO BE A DECENTRALIZED COMMUNITY THAT CAN <br/> CREATE NEW VALUES AND PROFITS THROUGH PLAY IN THE VIRTUAL <br/> WORLD.</h3>
-    <h4>...SCROLL TO READ</h4>
-    <canvas
-      ref={canvasRef}
-      style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100vw',
-          height: '100vh',
-          zIndex: 9,
-          pointerEvents: 'none', // Ensures it doesn't block user interactions
-        }}
-        />
+      </div>
+      <div className="main">
+        <div className="page">
+          <div className="loop">
+            <h1><b>CYBER</b>FICTION IS THE <b><i>REAL</i></b> <span>STORY</span> IN THE <span><i>METAVERSE.</i></span></h1>
+            <h1><b>CYBER</b>FICTION IS THE <b><i>REAL</i></b> <span>STORY</span> IN THE <span><i>METAVERSE.</i></span></h1>
+            <h1><b>CYBER</b>FICTION IS THE <b><i>REAL</i></b> <span>STORY</span> IN THE <span><i>METAVERSE.</i></span></h1>
+          </div>
+          <h3>CYBERFICTION AIMS TO BE A DECENTRALIZED COMMUNITY THAT CAN <br/> CREATE NEW VALUES AND PROFITS THROUGH PLAY IN THE VIRTUAL <br/> WORLD.</h3>
+          <h4>...SCROLL TO READ</h4>
+          <canvas
+            ref={canvasRef}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100vw',
+              height: '100vh',
+              zIndex: 9,
+              pointerEvents: 'none', // Ensures it doesn't block user interactions
+            }}
+          />
         </div>
         <div className="page1">
-            <div className="right-text">
-                <h3>CYBERFICTION / KEY WORD</h3>
-                <h1>HAVE FUN
-                  <br/>
-                    LET'S PLAY
-                  <br/>
-                    JUST BE TOGETHER</h1>
-            </div>
-            <div className="left-text">
-                <h1>MAKE A STORY
-                  <br/>
-                    TAKE A CHANCE
-                  <br/>
-                    BUILD AND OWNED</h1>
-                    <h3>..AND MAINTAIN GOOD HUMANITY</h3>
-            </div>
+          <div className="right-text">
+            <h3>CYBERFICTION / KEY WORD</h3>
+            <h1>HAVE FUN
+              <br/>
+              LET'S PLAY
+              <br/>
+              JUST BE TOGETHER</h1>
+          </div>
+          <div className="left-text">
+            <h1>MAKE A STORY
+              <br/>
+              TAKE A CHANCE
+              <br/>
+              BUILD AND OWNED</h1>
+            <h3>..AND MAINTAIN GOOD HUMANITY</h3>
+          </div>
         </div>
         <div className="page2">
-            <div className="text1">
-                <h3>CYBERFICTION / HAVE FUN</h3>
-                <h1>LET'S
-                  <br/>
-                    HAVE FUN
-                  <br/>
-                    TOGETHER</h1>
-            </div>
-            <div className="text2">
-                <p>LET'S HAVE A BLAST! LET'S JUST THROW AWAY AGE, GENDER, REGION, <br/> STATUS, ETC., DON'T COMPETE, DON'T FIGHT, COOPERATE AND SHARE <br/> WITH EACH OTHER AND ENJOY IT TOGETHER! SO THAT YOU CAN STAND <br/> THERE IN THE NOT-TOO-DISTANT FUTURE AND DREAM OF ANOTHER NEW <br/> FUTURE</p>
-            </div>
+          <div className="text1">
+            <h3>CYBERFICTION / HAVE FUN</h3>
+            <h1>LET'S
+              <br/>
+              HAVE FUN
+              <br/>
+              TOGETHER</h1>
+          </div>
+          <div className="text2">
+            <p>LET'S HAVE A BLAST! LET'S JUST THROW AWAY AGE, GENDER, REGION, <br/> STATUS, ETC., DON'T COMPETE, DON'T FIGHT, COOPERATE AND SHARE <br/> WITH EACH OTHER AND ENJOY IT TOGETHER! SO THAT YOU CAN STAND <br/> THERE IN THE NOT-TOO-DISTANT FUTURE AND DREAM OF ANOTHER NEW <br/> FUTURE</p>
+          </div>
         </div>
         <div className="page3">
-            <div className="text3">
-                <h3>CYBERFICTION / PLAYGROUND</h3>
-                <h1>
-
-CYBERFIELD
-<br/>
-IS OUR
-<br/>
-PLAYGROUND
-                </h1>
-               
-            </div>
+          <div className="text3">
+            <h3>CYBERFICTION / PLAYGROUND</h3>
+            <h1>CYBERFIELD
+              <br/>
+              IS OUR
+              <br/>
+              PLAYGROUND
+            </h1>
+          </div>
         </div>
-        </div>
-        </div>
+      </div>
+    </div>
   );
 };
 
